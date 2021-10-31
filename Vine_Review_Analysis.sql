@@ -83,7 +83,9 @@ CREATE TABLE statistic_table (
 	total_paid_5_stars INTEGER,
 	total_unpaid_5_stars INTEGER,
 	percentage_paid_5_stars DECIMAL(5,2),
-	percentage_unpaid_5_stars DECIMAL(5,2)
+	percentage_unpaid_5_stars DECIMAL(5,2),
+	average_rating_paid_review DECIMAL(5,2),
+	average_rating_unpaid_review DECIMAL(5,2)
 	);
 	-- Manipulate Table
 	SELECT * FROM statistic_table;
@@ -132,6 +134,22 @@ WHERE total_reviews = 79135;
 -- Determine percentage of unpaid 5 stars reviews
 UPDATE statistic_table AS s
 SET percentage_unpaid_5_stars = (s.total_unpaid_5_stars*100/s.total_5_stars)
+WHERE total_reviews = 79135;
+
+-- Calculate Average rating of paid reviews
+SELECT ROUND(AVG(star_rating),2)
+FROM paid_table
+	-- Add 4.12 averange paid review rating to statistic_table
+UPDATE statistic_table AS s
+SET average_rating_paid_review = 4.12
+WHERE total_reviews = 79135;
+
+-- Calculate Average rating of unpaid reviews
+SELECT ROUND(AVG(star_rating),2)
+FROM unpaid_table
+	-- Add 3.59 averange paid review rating to statistic_table
+UPDATE statistic_table AS s
+SET average_rating_unpaid_review = 3.59
 WHERE total_reviews = 79135;
 
 	-- Review final table
