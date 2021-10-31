@@ -75,25 +75,65 @@ WHERE division_table.vine = 'N';
 	SELECT * FROM unpaid_table;
 -- 77,360 unpaid reviews
 
+-- Statistics
+-- Create a table to hold the statistical values
+CREATE TABLE statistic_table (
+	total_reviews INTEGER,
+	total_5_stars INTEGER,
+	total_paid_5_stars INTEGER,
+	total_unpaid_5_stars INTEGER,
+	percentage_paid_5_stars DECIMAL(5,2),
+	percentage_unpaid_5_stars DECIMAL(5,2)
+	);
+	-- Manipulate Table
+	SELECT * FROM statistic_table;
+	DROP TABLE statistic_table
+	
 -- Determine total number of helpful reviews
+INSERT INTO statistic_table (total_reviews)
 SELECT COUNT(review_id)
 FROM division_table;
 -- 79,135 reviews
+	SELECT * FROM statistic_table;
 
 -- Determine total number of 5-stars reviews
 SELECT COUNT(review_id)
 FROM division_table AS d
 WHERE d.star_rating = 5;
--- 36,720 of helpful 5 starts review
+	-- Add 36,720 data of helpful 5 starts review to statistic_table
+UPDATE statistic_table
+SET total_5_stars = 36720
+WHERE total_reviews = 79135;
 
--- Determine percentage of paid 5-stars reviews
+-- Determine total number of paid 5-stars reviews
 SELECT COUNT(review_id)
 FROM division_table AS d
 WHERE d.star_rating = 5 AND d.vine = 'Y';
--- 783 of paid helpful 5 starts review
+	-- Add 783 of paid helpful 5 starts reviews to statistic_table
+UPDATE statistic_table
+SET total_paid_5_stars = 783
+WHERE total_reviews = 79135;
 
--- Determine percentage of unpaid 5-stars reviews
+-- Determine total number of unpaid 5-stars reviews
 SELECT COUNT(review_id)
 FROM division_table AS d
 WHERE d.star_rating = 5 AND d.vine = 'N';
--- 35,937 of unpaid helpful 5 starts review
+	-- Add 35,937 of unpaid helpful 5 starts reviews to statistic_table
+UPDATE statistic_table
+SET total_unpaid_5_stars = 35937
+WHERE total_reviews = 79135;
+
+
+-- Determine percentage of paid 5 stars reviews
+UPDATE statistic_table AS s
+SET percentage_paid_5_stars = (s.total_paid_5_stars*100/s.total_5_stars)
+WHERE total_reviews = 79135;
+
+-- Determine percentage of unpaid 5 stars reviews
+UPDATE statistic_table AS s
+SET percentage_unpaid_5_stars = (s.total_unpaid_5_stars*100/s.total_5_stars)
+WHERE total_reviews = 79135;
+
+	-- Review final table
+	SELECT * FROM statistic_table;
+
